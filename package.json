@@ -1,0 +1,26 @@
+{
+  "name": "cars_av_by_parser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://Demidovez@github.com/Demidovez/cars_av_by_parser.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Demidovez/cars_av_by_parser/issues"
+  },
+  "homepage": "https://github.com/Demidovez/cars_av_by_parser#readme",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "node-html-parser": "^2.0.0",
+    "puppeteer": "^5.5.0",
+    "puppeteer-core": "^5.5.0"
+  }
+}
