@@ -1,62 +1,43 @@
 const Browser = require("./browser/browser");
 const SiteParser = require("./siteparser/siteparser");
 
-// Создаем и запускаем браузер
+/*
+ *
+ * Создаем и запускаем браузер,
+ * для отдельного поиск номером телефонов и имен
+ *
+ */
+
 const browser = new Browser();
-const runBrowser = browser.init();
-
-// const parserData = SiteParser.parseAdvt(
-//   "https://cars.av.by/ford/fusion/16737228"
-// );
-
-const listUrl = SiteParser.parseUrlsOfAdvts(
-  "https://cars.av.by",
-  "/filter?sort=4"
-);
-
-Promise.all([runBrowser, listUrl]).then(([, listUrl]) => {
-  listUrl.map((url) => {
-    const parserData = SiteParser.parseAdvt(url);
-
-    const parserPhoneAndAuthor = browser
-      .getPhoneAndName(url)
+browser
+  .init()
+  .then(() =>
+    browser
+      .getPhoneAndName("https://cars.av.by/uaz/hunter/100106062")
       .then((result) => {
         console.log(result);
 
         return result;
       })
-      .catch(console.error);
-  });
-});
+      .catch(console.error)
+  )
+  .then(() => browser.close());
 
-// SiteParser.parseUrlsOfAdvts("https://cars.av.by", "/filter?sort=4").then(
-//   (listUrl) => {
-//     const listAdvts = listUrl.map((url) => {
-//       const parserData = SiteParser.parseAdvt(url);
+/*
+ *
+ * Находим ссылки на новые объвления
+ * и начинаем парсить по ним
+ *
+ */
 
-//       const parserPhoneAndAuthor = browser
-//         .getPhoneAndName(url)
-//         .then((result) => {
-//           // console.log(result);
+SiteParser.parseUrlsOfAdvts("https://cars.av.by", "/filter?sort=4").then(
+  (listUrl) =>
+    listUrl.map((url) =>
+      SiteParser.parseAdvt(url).then((advt) => {
+        console.log(advt);
 
-//           return result;
-//         })
-//         .catch(console.error);
-
-//       return Promise.all([parserData, parserPhoneAndAuthor]).then((result) => {
-//         const [advt, phoneAndAuthor] = result;
-//         const fullAdvt = { ...advt, ...phoneAndAuthor };
-
-//         console.log(phoneAndAuthor);
-//         console.log(fullAdvt.model);
-
-//         // Отправка на сервер
-//         console.log("Отправка на сервер...");
-
-//         return fullAdvt;
-//       });
-//     });
-
-//     Promise.all(listAdvts).then(() => browser.close());
-//   }
-// );
+        // Отправка на сервер
+        console.log("Отправка на сервер...");
+      })
+    )
+);

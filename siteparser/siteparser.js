@@ -119,6 +119,12 @@ class SiteParser {
         // Дата парсинга
         const date_parsing = new Date();
 
+        // Телефон автора объвления, пока пустое, парсинг номеров и имени просиходит отдельным потоком
+        const phone = "";
+
+        // Имя автора объвления, пока пустое, парсинг номеров и имени просиходит отдельным потоком
+        const author = "";
+
         const advt = {
           model,
           series,
@@ -152,9 +158,9 @@ class SiteParser {
           multimedia,
           comfort,
           date_parsing,
+          phone,
+          author,
         };
-
-        // console.log(advt);
 
         // Возвращаем добытые данные
         return advt;
@@ -164,6 +170,7 @@ class SiteParser {
       });
   }
 
+  // Находим ссылки на новые объявления
   static parseUrlsOfAdvts(host, url) {
     return axios
       .get(host + url)

@@ -1,10 +1,10 @@
 const puppeteer = require("puppeteer");
+const parser = require("node-html-parser");
 
 class Browser {
   constructor() {
     // Создаем поля класса
     this.browser = null;
-    this.page = null;
     this.initedBrowser = null;
   }
 
@@ -17,17 +17,14 @@ class Browser {
           headless: true,
           args: ["--no-sandbox"],
         });
-        // Создаем условную вкладку
-        const page = await browser.newPage();
 
-        return resolve({ browser, page });
+        return resolve(browser);
       } catch (e) {
         return reject(e);
       }
     }).then(
-      ({ browser, page }) => {
+      (browser) => {
         this.browser = browser;
-        this.page = page;
       },
       (error) => {
         console.log(error);
@@ -40,7 +37,9 @@ class Browser {
   getPhoneAndName(url) {
     // Открываем страницу объявлени
     return new Promise(async (resolve, reject) => {
+      // Создаем условную вкладку
       const page = await this.browser.newPage();
+
       try {
         await page.goto(url, { timeout: 0 });
         // Кликаем по кнопке Показать телефон
@@ -48,21 +47,17 @@ class Browser {
         // Ждем когда появится блок справа, где прописан телефон и имя автора объявления
         await page.waitForSelector("div.phones__card");
 
-        console.log("________ " + url);
-        console.log(page._target._targetInfo.url);
+        // Парсим содержимое кликнутой страницы
+        const root = parser.parse(await page.content());
 
         // Парсим телефон и имя
-        let phone_author = await page.evaluate(() => {
-          const results = {
-            phone: document
-              .querySelector("ul.phones__list li")
-              .innerText.replace(/[^\d]/g, ""),
-            author: document.querySelector("p.phones__owner").innerText,
-          };
+        const phone = root
+          .querySelector("ul.phones__list li")
+          .innerText.replace(/[^\d]/g, "");
 
-          return results;
-        });
-        return resolve({ ...phone_author, url });
+        const author = root.querySelector("p.phones__owner").innerText;
+
+        return resolve({ phone, author, url });
       } catch (e) {
         return reject(e);
       } finally {

@@ -43,6 +43,7 @@ class Helper {
   }
 
   // Достаем дату создания объявления
+  // TODO: А точно 3 пункта может быть? видел 4, с добавлением "поднято 9 часов назад"
   static getDateRelease(stats) {
     if (stats) {
       return stats.length == 3 ? stats[1].rawText : "";

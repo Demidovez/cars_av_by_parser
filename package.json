@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Demidovez/cars_av_by_parser#readme",
   "dependencies": {
     "axios": "^0.21.0",
+    "browserless": "^8.1.40",
     "node-html-parser": "^2.0.0",
     "puppeteer": "^5.5.0",
     "puppeteer-core": "^5.5.0"
