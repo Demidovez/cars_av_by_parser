@@ -179,10 +179,20 @@ class SiteParser {
 
         const listUrls = root
           .querySelectorAll(".listing__items .listing-item .listing-item__link")
-          .map((link) => host + link.rawAttrs.match(/href="(.*?)"/)[1]);
+          .map((link) => link.rawAttrs.match(/href="(.*?)"/)[1]);
 
         return listUrls;
       })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  // Отправляем найденные ссылки на странице на сервер, и там оперделяем уникальные, которых нету в БД
+  static getUniqueLinks(site, server, listLinks) {
+    return axios
+      .post(server, { site, listLinks })
+      .then((response) => response.data)
       .catch((error) => {
         console.log(error);
       });
