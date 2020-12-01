@@ -35,12 +35,12 @@ const startParsingPhoneAndAuthor = () => {
 
 const startParsingAdvts = async () => {
   // Парсим 10 новых страниц (нужно доработать)
-  for (let numPage = 1; numPage <= 10; numPage++) {
+  for (let numPage = 1; numPage <= 10; ) {
     console.log("================= Страница " + numPage);
 
     await SiteParser.parseUrlsOfAdvts(
       CONFIG.SITE_DONOR,
-      "/filter?page=" + numPage + "&sort=4"
+      "/filter?page=" + 1 + "&sort=4" // "/filter?page=" + numPage + "&sort=4"
     )
       // Находим уникальные ссылки, которых нету в БД
       .then((listNewLinks) =>
@@ -50,9 +50,14 @@ const startParsingAdvts = async () => {
           listNewLinks
         )
       )
-      .then((listUniqueLinks) => {
+      .then(async (listUniqueLinks) => {
         console.log("Новых ссылок " + listUniqueLinks.length);
         console.log(listUniqueLinks);
+
+        if (listUniqueLinks.length == 0) {
+          console.log("Ждем 5 секунд... ");
+          await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](5000);
+        }
 
         return listUniqueLinks;
       })
