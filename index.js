@@ -8,17 +8,18 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Инициализируем парсер и пробуем запуститься
+// Инициализируем парсер
 const parser = new Parser();
-parser.tryStart();
+parser.init();
 
-// Принимаем команду на изменение настроек парсер
+// Принимаем команду на изменение настроек парсера
 app.post("/edit_cars_av_by_parser", (req, res) => {
   const options = req.body;
 
   parser.setOptions(options);
 
-  res.send("OK");
+  // Обратно серверу отвечаем, что все ОК
+  res.sendStatus(200);
 });
 
 app.listen(CONFIG.PORT, () =>

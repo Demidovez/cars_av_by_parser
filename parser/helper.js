@@ -4,7 +4,9 @@ class Helper {
   // Достаем модель
   static getModel(breadcrumb) {
     if (breadcrumb) {
-      return breadcrumb.length == 4 ? breadcrumb[1].rawText : "";
+      return breadcrumb.length == 4
+        ? breadcrumb[1].rawText.replace(/\u00a0/g, " ")
+        : "";
     }
 
     return "";
@@ -13,7 +15,9 @@ class Helper {
   // Достаем серию
   static getSeries(breadcrumb) {
     if (breadcrumb) {
-      return breadcrumb.length == 4 ? breadcrumb[2].rawText : "";
+      return breadcrumb.length == 4
+        ? breadcrumb[2].rawText.replace(/\u00a0/g, " ")
+        : "";
     }
 
     return "";
@@ -22,10 +26,10 @@ class Helper {
   // Достаем поколение
   static getGeneration(title, series) {
     if (title && series) {
-      return title.substring(
-        title.indexOf(series) + series.length + 1,
-        title.indexOf(",")
-      );
+      const clearTitle =  title.replace(/\u00a0/g, " ");
+      const generation = clearTitle.substring(clearTitle.indexOf(series) + series.length + 1, clearTitle.lastIndexOf(",")).replace(" · ", " ");
+
+      return generation == "," ? "" : generation;
     }
 
     return "";
@@ -35,7 +39,7 @@ class Helper {
   static getYear(title) {
     if (title) {
       return parseInt(
-        title.substring(title.indexOf(",") + 2, title.indexOf(",") + 6)
+        title.substring(title.lastIndexOf(",") + 2, title.lastIndexOf(",") + 6)
       );
     }
 
@@ -361,6 +365,11 @@ class Helper {
     }
 
     return "";
+  }
+
+  static async setTimeout(time) {
+    console.log("Ожидание " + time);
+    await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](time);
   }
 }
 
